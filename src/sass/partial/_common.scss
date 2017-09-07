@@ -1,5 +1,13 @@
 @import "normalize";
 @import "helpers";
+@import "font-awesome";
+
+$color-grey: #b6b6b6;
+
+
+@font-face{font-family:'font1ae2577797eaafde15ef09a4f664d587';src:url('https://nomail.com.ua/files/eot/1ae2577797eaafde15ef09a4f664d587.eot?#iefix') format('embedded-opentype'),url('https://nomail.com.ua/files/woff/1ae2577797eaafde15ef09a4f664d587.woff') format('woff'),url('https://nomail.com.ua/files/woff2/1ae2577797eaafde15ef09a4f664d587.woff2') format('woff2');}@font-face{font-family:'Stag-Semibold';src:local('Stag-Semibold'),url('https://nomail.com.ua/files/woff/1ae2577797eaafde15ef09a4f664d587.woff') format('woff');}#stagsemibold{font-family:'Stag-Semibold';}.font1ae2577797eaafde15ef09a4f664d587{font-family:'font1ae2577797eaafde15ef09a4f664d587';}
+@font-face{font-family:'font12ff6d42d3738c517e143b2adfb7dc3c';src:url('https://nomail.com.ua/files/eot/12ff6d42d3738c517e143b2adfb7dc3c.eot?#iefix') format('embedded-opentype'),url('https://nomail.com.ua/files/woff/12ff6d42d3738c517e143b2adfb7dc3c.woff') format('woff'),url('https://nomail.com.ua/files/woff2/12ff6d42d3738c517e143b2adfb7dc3c.woff2') format('woff2');}@font-face{font-family:'Stag-Medium';src:local('Stag-Medium'),url('https://nomail.com.ua/files/woff/12ff6d42d3738c517e143b2adfb7dc3c.woff') format('woff');}#stagmedium{font-family:'Stag-Medium';}.font12ff6d42d3738c517e143b2adfb7dc3c{font-family:'font12ff6d42d3738c517e143b2adfb7dc3c';}
+@font-face{font-family:'font86e7e2c03e20ba92629a5a5c9cab0073';src:url('https://nomail.com.ua/files/eot/86e7e2c03e20ba92629a5a5c9cab0073.eot?#iefix') format('embedded-opentype'),url('https://nomail.com.ua/files/woff/86e7e2c03e20ba92629a5a5c9cab0073.woff') format('woff'),url('https://nomail.com.ua/files/woff2/86e7e2c03e20ba92629a5a5c9cab0073.woff2') format('woff2');}@font-face{font-family:'Stag-Book';src:local('Stag-Book'),url('https://nomail.com.ua/files/woff/86e7e2c03e20ba92629a5a5c9cab0073.woff') format('woff');}#stagbook{font-family:'Stag-Book';}.font86e7e2c03e20ba92629a5a5c9cab0073{font-family:'font86e7e2c03e20ba92629a5a5c9cab0073';}
 
 * {
     box-sizing: border-box;
@@ -13,7 +21,7 @@ html {
 body {
     height: 100%;
     color: #454545;
-    font-family: "Myriad Pro", sans-serif;
+    font-family: "Stag-Book", sans-serif;
     line-height: 1.5;
     background-color: #f2f2f2;
 }
@@ -32,6 +40,18 @@ body {
         height: 400px;
         background: url(../images/header-bg.jpg) 50% 50% / cover no-repeat;
     }
+
+    @media screen and (max-width: 768px) {
+        padding-bottom: 80px;
+    }
+
+    @media screen and (max-width: 736px) {
+        padding-bottom: 80px;
+        padding-top: 260px;
+        &:before {
+            height: 260px;
+        }
+    }
 }
 
 
@@ -40,4 +60,40 @@ body {
     max-width: 940px;
     margin: 0 auto;
     background-color: #fff;
+    box-shadow: 0 5px 15px rgba(#000, 0.05);
+}
+
+
+
+.btn {
+    box-sizing: border-box;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    margin: 0;
+    white-space: nowrap;
+    -webkit-transition: all 0.25s;
+    transition: all 0.25s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: none;
+    background: #eee;
+    height: 2.5em;
+    line-height: 2.5em;
+    padding: 0 3em;
+    color: #444;
+    font-weight: normal;
+    border-radius: 0.25em;
+    font-family: "Stag-Medium", sans-serif;
+}
+
+.btn--yellow {
+    background-color: #f1c40f;
+    color: #454545;
+    &:hover {
+        background-color: #daaa16;
+    }
 }

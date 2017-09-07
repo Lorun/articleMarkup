@@ -13,7 +13,7 @@
     <main class="main" id="content" role="main">
         <article class="post">
             <header class="post-header">
-                <h1 class="post-head">The Road to Home</h1>
+                <h1 class="post-head"><i class="fa fa-star"></i>The Road to Home</h1>
                 <time datetime="2015-06-18" class="post-date">June 18, 2015</time>
             </header>
 
@@ -29,13 +29,15 @@
             </div>
 
             <footer class="post-footer">
-                <span class="post-author">Post by <b>Will Smith</b></span>
-                <span class="post-posted">Posted <time datetime="2015-06-18">June 18, 2015</time> at <b>21:14</b></span>
-                <span class="post-commentsInfo">12 comments</span>
+                <span class="post-author"><i class="fa fa-user" aria-hidden="true"></i> Post by <b>Will Smith</b></span>
+                <span class="post-posted"><i class="fa fa-clock-o" aria-hidden="true"></i> Posted <time datetime="2015-06-18">June 18, 2015</time> at <b>21:14</b></span>
+                <span class="post-commentsInfo"><i class="fa fa-comment" aria-hidden="true"></i> 12 comments</span>
             </footer>
 
             <section id="comments" class="post-comments">
-                <h3>Leave comment:</h3>
+                <h3 class="post-commentsTitle">Leave comment:</h3>
+
+                <div class="post-avatarHolder"><span class="post-avatar"></span></div>
                 <form id="app_comments_form" class="commentsForm">
                     <input type="hidden" name="id">
                     <input type="hidden" name="parent" value="0">
@@ -43,8 +45,12 @@
                     <button type="submit" class="btn btn--yellow commentsForm-btn">Send</button>
                 </form>
 
-                <div class="commentsList">
+                <div class="commentsList"></div>
 
+                <div class="commentsLoad">
+                    <span class="commentsLoad-holder">
+                        <a href="#" class="commentsLoad-btn btn js-load-more-comments">load more comments</a>
+                    </span>
                 </div>
             </section>
 
@@ -62,9 +68,9 @@
         <span class="comment-posted"></span>
         <p class="comment-content"></p>
         <div class="comment-actions">
-            <a href="#edit" class="comment-edit js-edit-comment">Edit</a>
-            <a href="#delete" class="comment-delete js-delete-comment">Delete</a>
-            <a href="#reply" class="comment-reply js-show-reply" rel="nofollow">Reply</a>
+            <a href="#edit" class="comment-edit js-edit-comment"><i class="fa fa-edit"></i> Edit</a>
+            <a href="#delete" class="comment-delete js-delete-comment"><i class="fa fa-close"></i> Delete</a>
+            <a href="#reply" class="comment-reply js-show-reply" rel="nofollow"><i class="fa fa-reply"></i> Reply</a>
         </div>
     </div>
     <div class="comment-replyForm"></div>

@@ -1,10 +1,11 @@
 ;(function($) {
 
+    var offset = 0;
+    var count = 5;
     var authorId = 1;
     var $comments = $('#comments');
     var $commentTemplate = $('#comment_tpl');
     var $commentsContainer = $('.commentsList');
-
 
     var api = {
         api_url: 'http://frontend-test.pingbull.com/pages/ruslan@lobarev.com/comments',
@@ -35,13 +36,15 @@
                 }
             });
         },
-        editComment: function(id) {
+        editComment: function(data) {
             return $.ajax({
-                url: this.api_url + '/' + id,
+                url: this.api_url + '/' + data.id,
                 type: 'POST',
                 dateType: 'json',
                 data: {
-                    _method: 'PUT'
+                    _method: 'PUT',
+                    content: data.content,
+                    parent: data.parent
                 }
             });
         },
@@ -53,13 +56,20 @@
         }
     };
 
-    /*api.getComment(1548).then(function(json) {
-        console.log(json);
-    });*/
 
-    api.getCommentsList(10).then(function(data) {
-        console.log(data);
+    function init() {
+        loadComments();
+    }
 
+    function loadComments() {
+        api
+            .getCommentsList(count, offset)
+            .then(appendCommentList);
+
+        offset = offset + count;
+    }
+
+    function appendCommentList(data) {
         data.map(function(comment) {
             var commentElement = createComment($commentTemplate, comment);
             $commentsContainer.append(commentElement);
@@ -71,8 +81,7 @@
                 });
             }
         });
-
-    });
+    }
 
     function createComment(tpl, comment, className) {
         var template = tpl.clone().attr('id', 'comment-'+comment.id);
@@ -83,11 +92,14 @@
             template.find('.comment-edit').remove();
         }
 
+        var date = new Date(comment.created_at);
+        var dateHtml = '<i class="fa fa-clock-o"></i> <b>'+date.getYear() +'-'+ ('0' + date.getMonth()).slice(-2) +'-'+ ('0' + date.getDate()).slice(-2) + '</b> at <b>' + date.getHours()+':'+date.getMinutes()+'</b>';
+
         template.data('id', comment.id);
         template.find('.comment-author').text(comment.author.name);
         template.find('.comment-avatar').css('background-image', 'url('+comment.author.avatar+')');
         template.find('.comment-content').text(comment.content);
-        template.find('.comment-posted').text(comment.created_at);
+        template.find('.comment-posted').html(dateHtml);
         template.show();
         return template;
     }
@@ -97,6 +109,7 @@
         return function(e) {
             e.preventDefault();
             var elements = e.target.elements;
+            var id = +elements['id'].value;
             var parent_id = +elements['parent'].value;
             var data = {
                 content: elements['content'].value,
@@ -104,48 +117,26 @@
             };
 
             if (data.content.length > 5) {
-                api.addComment(data).done(function(response) {
+                var action = id ? api.editComment.bind(api) : api.addComment.bind(api);
+                if (id) data.id = id;
+
+                action(data).done(function(response) {
                     callback && callback(response);
                     e.target.reset();
-                    console.log(response);
                 });
             }
         }
     }
 
 
+    /* Submit form listener */
     $('#app_comments_form').on('submit', handleFormSubmit(function(comment) {
         $commentsContainer
             .prepend(createComment($commentTemplate, comment));
     }));
 
 
-    $($comments).on('click', '.js-show-reply', function(e) {
-        e.preventDefault();
-        var currentComment = $(this).closest('.comment');
-        var replyFormContainer = currentComment.find('.comment-replyForm').first();
-        var form = $('#app_comments_form').clone().attr('id', '');
-        var cancelBtn = $('<a>').addClass('comment-closeReplyForm js-close-reply-form').text('Cancel');
-
-        form[0].elements['parent'].value = currentComment.data('id');
-        form[0].elements['content'].value = '';
-
-        replyFormContainer.append(cancelBtn).append(form);
-
-        form.on('submit', handleFormSubmit(function(comment) {
-            cancelBtn.trigger('click');
-            currentComment
-                .find('.comment-children')
-                .first()
-                .append(createComment($commentTemplate, comment, 'comment--child'));
-        }));
-    });
-
-    $($comments).on('click', '.js-close-reply-form', function(e) {
-        e.preventDefault();
-        $(this).closest('.comment-replyForm').html('');
-    });
-
+    /* Delete comment */
     $($comments).on('click', '.js-delete-comment', function(e) {
         e.preventDefault();
         var $comment = $(this).closest('.comment');
@@ -157,24 +148,75 @@
         });
     });
 
+    /* Reply comment */
+    $($comments).on('click', '.js-show-reply', function(e) {
+        e.preventDefault();
+        var currentComment = $(this).closest('.comment');
+        var replyFormContainer = currentComment.find('.comment-replyForm').first();
+        var form = $('#app_comments_form').clone().attr('id', '');
+        var cancelBtn = $('<a>').addClass('comment-closeReplyForm js-close-reply-form').html('<i class="fa fa-close"></i> Cancel');
+
+        form[0].elements['parent'].value = currentComment.data('id');
+        form[0].elements['content'].value = '';
+
+        $('.comment-replyForm').html('');
+
+        replyFormContainer
+            .append(cancelBtn)
+            .append(form);
+
+        form.on('submit', handleFormSubmit(function(comment) {
+            cancelBtn.trigger('click');
+            currentComment
+                .find('.comment-children')
+                .first()
+                .append(createComment($commentTemplate, comment, 'comment--child'));
+        }));
+    });
+
+    /* Edit comment */
     $($comments).on('click', '.js-edit-comment', function(e) {
         e.preventDefault();
-        var $comment = $(this).closest('.comment');
-        var id = $comment.data('id');
-        var form = $('#app_comments_form');
+        var currentComment = $(this).closest('.comment');
+        var replyFormContainer = currentComment.find('.comment-replyForm').first();
+        var id = currentComment.data('id');
+        var form = $('#app_comments_form').clone().attr('id', '');
+        var cancelBtn = $('<a>').addClass('comment-closeReplyForm js-close-reply-form').html('<i class="fa fa-close"></i> Cancel');
+
+        form.find('button').text('Edit comment');
+
+        $('.comment-replyForm').html('');
+
+        replyFormContainer
+            .append(cancelBtn)
+            .append(form);
 
         api.getComment(id).then(function(comment) {
             form[0].elements['id'].value = comment.id;
             form[0].elements['parent'].value = comment.parent;
             form[0].elements['content'].value = comment.content;
 
-            var yOffset = form.offset().top;
-            $("body").scrollTop(yOffset);
+            form.on('submit', handleFormSubmit(function(comment) {
+                cancelBtn.trigger('click');
+                currentComment.find('.comment-content').text(comment.content);
+            }));
         });
+    });
 
+    $($comments).on('click', '.js-load-more-comments', function(e) {
+        e.preventDefault();
+        loadComments();
+    });
+
+
+    /* Close child form */
+    $($comments).on('click', '.js-close-reply-form', function(e) {
+        e.preventDefault();
+        $(this).closest('.comment-replyForm').html('');
     });
 
 
 
+    init();
 
 })($);
