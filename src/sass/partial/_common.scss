@@ -1,0 +1,43 @@
+@import "normalize";
+@import "helpers";
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    font-size: 17px;
+}
+
+body {
+    height: 100%;
+    color: #454545;
+    font-family: "Myriad Pro", sans-serif;
+    line-height: 1.5;
+    background-color: #f2f2f2;
+}
+
+.container {
+    padding-top: 320px;
+    padding-bottom: 155px;
+    min-height: 100%;
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 400px;
+        background: url(../images/header-bg.jpg) 50% 50% / cover no-repeat;
+    }
+}
+
+
+.main {
+    position: relative;
+    max-width: 940px;
+    margin: 0 auto;
+    background-color: #fff;
+}
