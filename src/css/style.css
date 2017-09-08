@@ -2970,7 +2970,7 @@ body {
     border-radius: 4px; }
   .comment-author {
     font-family: "Stag-Medium", sans-serif; }
-  .comment-posted {
+  .comment-parentAuthor, .comment-posted {
     color: #b6b6b6;
     margin-left: 10px;
     font-size: 15px; }
