@@ -77,13 +77,13 @@
             if (comment.children.length > 0) {
                 var commentChildContainer = commentElement.find('.comment-children');
                 comment.children.map(function(child) {
-                    commentChildContainer.append(createComment($commentTemplate, child, 'comment--child'));
+                    commentChildContainer.append(createComment($commentTemplate, child, 'comment--child', comment.author.name));
                 });
             }
         });
     }
 
-    function createComment(tpl, comment, className) {
+    function createComment(tpl, comment, className, parentAuthorName) {
         var template = tpl.clone().attr('id', 'comment-'+comment.id);
         className && template.addClass(className);
 
@@ -94,9 +94,11 @@
 
         var date = new Date(comment.created_at);
         var dateHtml = '<i class="fa fa-clock-o"></i> <b>'+date.getYear() +'-'+ ('0' + date.getMonth()).slice(-2) +'-'+ ('0' + date.getDate()).slice(-2) + '</b> at <b>' + date.getHours()+':'+date.getMinutes()+'</b>';
+        var $author = template.find('.comment-author');
 
+        $author.text(comment.author.name);
+        parentAuthorName && $author.after('<span class="comment-parentAuthor"><i class="fa fa-share"></i> '+parentAuthorName+'</span>');
         template.data('id', comment.id);
-        template.find('.comment-author').text(comment.author.name);
         template.find('.comment-avatar').css('background-image', 'url('+comment.author.avatar+')');
         template.find('.comment-content').text(comment.content);
         template.find('.comment-posted').html(dateHtml);
@@ -167,12 +169,13 @@
             .append(cancelBtn)
             .append(form);
 
+        console.log(currentComment.find('.comment-author').text());
         form.on('submit', handleFormSubmit(function(comment) {
             cancelBtn.trigger('click');
             currentComment
                 .find('.comment-children')
                 .first()
-                .append(createComment($commentTemplate, comment, 'comment--child'));
+                .append(createComment($commentTemplate, comment, 'comment--child', currentComment.find('.comment-author').text()));
         }));
     });
 
