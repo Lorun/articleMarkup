@@ -116,7 +116,7 @@
                 parent: parent_id !== 0 ? parent_id : null
             };
 
-            if (data.content.length > 5) {
+            if (data.content.length > 1) {
                 var action = id ? api.editComment.bind(api) : api.addComment.bind(api);
                 if (id) data.id = id;
 
@@ -124,6 +124,8 @@
                     callback && callback(response);
                     e.target.reset();
                 });
+            } else {
+                alert('The comment is too short!');
             }
         }
     }
@@ -141,11 +143,11 @@
         e.preventDefault();
         var $comment = $(this).closest('.comment');
         var id = $comment.data('id');
-        api.deleteComment(id).then(function() {
-            if (confirm('Are you sure you want to delete you comment?')) {
+        if (window.confirm('Are you sure you want to delete you comment?')) {
+            api.deleteComment(id).then(function () {
                 $comment.remove();
-            }
-        });
+            });
+        }
     });
 
     /* Reply comment */
